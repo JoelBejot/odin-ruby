@@ -1,0 +1,28 @@
+
+[1mFrom:[0m /home/joelbejot/odin-ruby/odin-ruby/mastermind/main.rb:42 Mastermind#begin?:
+
+    [1;34m19[0m: [32mdef[0m [1;34mbegin?[0m
+    [1;34m20[0m:   start_game = [1;36mfalse[0m
+    [1;34m21[0m:   answer = [1;36mnil[0m
+    [1;34m22[0m:   [32munless[0m start_game
+    [1;34m23[0m:     puts [31m[1;31m"[0m[31mDo you want to play Mastermind? (y/n)[1;31m"[0m[31m[0m
+    [1;34m24[0m:     answer = gets.chomp.downcase
+    [1;34m25[0m:     puts [31m[1;31m"[0m[31m[1;31m"[0m[31m[0m
+    [1;34m26[0m:     validate_boolean(answer)
+    [1;34m27[0m:     [32mif[0m answer == [31m[1;31m"[0m[31mn[1;31m"[0m[31m[0m
+    [1;34m28[0m:       puts [31m[1;31m"[0m[31mUntil next time![1;31m"[0m[31m[0m 
+    [1;34m29[0m:       puts [31m[1;31m"[0m[31m[1;31m"[0m[31m[0m
+    [1;34m30[0m:       exit
+    [1;34m31[0m:     [32mend[0m
+    [1;34m32[0m:     puts [31m[1;31m"[0m[31mOK! Let's begin.[1;31m"[0m[31m[0m
+    [1;34m33[0m:     puts [31m[1;31m"[0m[31m[1;31m"[0m[31m[0m
+    [1;34m34[0m:     puts [31m[1;31m"[0m[31mWhat would player One like to be called?[1;31m"[0m[31m[0m
+    [1;34m35[0m:     @name1 = gets.chomp
+    [1;34m36[0m:     puts [31m[1;31m"[0m[31mWhat would player Two like to be called?[1;31m"[0m[31m[0m
+    [1;34m37[0m:     @name2 = gets.chomp
+    [1;34m38[0m:     start_game = [1;36mtrue[0m
+    [1;34m39[0m: 
+    [1;34m40[0m:     binding.pry
+    [1;34m41[0m:   [32mend[0m
+ => [1;34m42[0m: [32mend[0m
+
