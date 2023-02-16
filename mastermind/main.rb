@@ -14,29 +14,35 @@ class Mastermind
     @@counter = 0
     @name1 = name1
     @name2 = name2
+    @turn = 0
     @code_nums = []
     @code = []
-    @hints = []
+    @hints = {}
+    @guess_hash = {}
+    @guess_hash_colors = {}
     @code_guesses = ""
     @active_game = true
-    @correct_position = "\u2022".colorize(:black).encode('utf-8')
+    @correct_position = "\u2022".colorize(:red).encode('utf-8')
     @correct_color = "\u2022".colorize(:white).encode('utf-8')
   end
 
   def game
     over = false
-    turn = 0
     #self.begin?
     #self.display_rules
     self.set_code
-    self.display_whole_board
+    self.board
     while over == false
-      turn += 1
+      @turn += 1
       self.get_guess
-      self.compare_guess_with_code
-      self.winner?(over)
-      p over
-      if turn > 12
+      @guess_hash[@turn] = @code_guesses
+      @guess_hash_colors[@turn] = []
+      self.guess_colors(@guess_hash[@turn])
+      @hints[@turn] = []
+      self.compare_guess_with_code(@hints[@turn])
+      self.board
+      over = self.winner?(over)
+      if @turn >= 8
         break
       end
     end
@@ -106,34 +112,32 @@ class Mastermind
       @code_nums << num
       code_colors(num)
     end
-    puts @code_nums
     puts "#{@code[0]}  #{@code[1]}  #{@code[2]}  #{@code[3]}"
   end
 
   def get_guess
     answer = false
     puts "Please enter four numbers, 1-6"
-    unless answer
+    while answer == false
       @code_guesses = gets.chomp
-      validate_num(@code_guesses, answer)
-      return if answer
+      answer = validate_num(@code_guesses)
+      return if answer == true
     end
   end
 
-  def compare_guess_with_code
+  def compare_guess_with_code(array)
     # compare @code_nums with @code_guesses. 
     @code_nums.each_index do |index|
-      p @code_nums[index]
-      p @code_guesses[index]
       if @code_nums[index] == @code_guesses[index]
         #reward black peg
-        @hints << @correct_position
-        puts @hints
+        array << @correct_position
+        #puts @hints
       elsif @code_guesses.any? { |el| el == @code_nums[index] }
         #reward white peg
-        @hints << @correct_color
-        puts @hints
+        array << @correct_color
+        #puts @hints
       end
+      return array
     end
   end
 

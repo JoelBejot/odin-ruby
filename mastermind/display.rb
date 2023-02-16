@@ -10,24 +10,35 @@ module Display
     end
   end
 
-  def display_whole_board
-    puts ""
-    puts "Secret Code: REDACTED REDACTED REDACTED REDACTED".colorize(background: :white)
-    puts ""
-    puts "Guess 1:     ________ ________ ________ ________"
-    puts "Guess 2:     ________ ________ ________ ________"
-    puts "Guess 3:     ________ ________ ________ ________"
-    puts "Guess 4:     ________ ________ ________ ________"
-    puts "Guess 5:     ________ ________ ________ ________"
-    puts "Guess 6:     ________ ________ ________ ________"
-    puts "Guess 7:     ________ ________ ________ ________"
-    puts "Guess 8:     ________ ________ ________ ________"
-    puts "Guess 9:     ________ ________ ________ ________"
-    puts "Guess 10:    ________ ________ ________ ________"
-    puts "Guess 11:    ________ ________ ________ ________"
-    puts "Guess 12:    ________ ________ ________ ________"
+  def guess_colors(arr)
+    arr.each do |num|
+      case num
+      when 1 then @guess_hash_colors[@turn] << "    1    ".colorize(background: :blue)
+      when 2 then @guess_hash_colors[@turn] << "    2    ".colorize(background: :red)
+      when 3 then @guess_hash_colors[@turn] << "    3    ".colorize(background: :green)
+      when 4 then @guess_hash_colors[@turn] << "    4    ".colorize(background: :magenta)
+      when 5 then @guess_hash_colors[@turn] << "    5    ".colorize(background: :yellow)
+      when 6 then @guess_hash_colors[@turn] << "    6    ".colorize(background: :cyan)
+      end
+    end
+    @guess_hash_colors[@turn]
   end
 
-  def display_turns
+  def board
+    turn = 1
+    puts "Secret Code: REDACTED  REDACTED  REDACTED  REDACTED ".colorize(background: :white)
+    puts ""
+    8.times do
+      if @guess_hash_colors.has_key?(turn)
+        puts "Guess #{turn}:     #{@guess_hash_colors[turn][0]} #{@guess_hash_colors[turn][1]} #{@guess_hash_colors[turn][2]} #{@guess_hash_colors[turn][3]}" 
+        print "Hints: #{@hints[turn][0].to_s}  #{@hints[turn][1].to_s}  #{@hints[turn][2].to_s}  #{@hints[turn][3].to_s}"
+        puts ""
+        puts ""
+      else
+        puts "Guess #{turn}:     _________ _________ _________ _________"
+        puts ""
+      end
+      turn += 1
+    end
   end
 end
