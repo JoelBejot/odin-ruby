@@ -10,6 +10,9 @@ class Mastermind
 
   attr_accessor :name1, :name2
 
+  CORRECT_POSITION = "\u2022".colorize(:red).encode('utf-8')
+  CORRECT_COLOR = "\u2022".colorize(:white).encode('utf-8')
+
   def initialize
     @@counter = 0
     @name1 = name1
@@ -22,29 +25,44 @@ class Mastermind
     @guess_hash_colors = {}
     @code_guesses = ""
     @active_game = true
-    @correct_position = "\u2022".colorize(:red).encode('utf-8')
-    @correct_color = "\u2022".colorize(:white).encode('utf-8')
   end
 
   def game
     over = false
-    #self.begin?
-    #self.display_rules
-    self.set_code
-    self.board
-    while over == false
-      @turn += 1
-      self.get_guess
-      @guess_hash[@turn] = @code_guesses
-      @guess_hash_colors[@turn] = []
-      self.guess_colors(@guess_hash[@turn])
-      @hints[@turn] = []
-      self.compare_guess_with_code(@hints[@turn])
+    again = true
+    self.begin?
+    while again == true
+      self.display_rules
+      self.set_code
       self.board
-      over = self.winner?(over)
-      if @turn >= 8
-        break
+      while over == false
+        @turn += 1
+        self.get_guess
+        @guess_hash[@turn] = @code_guesses
+        @guess_hash_colors[@turn] = []
+        self.guess_colors(@guess_hash[@turn])
+        @hints[@turn] = []
+        @hints[@turn] = compare_guess_with_code(@hints[@turn])
+        puts @hints[@turn].to_s + "\n"
+        self.board
+        over = self.winner?(over)
+        if @turn >= 8
+          puts "The correct code was #{@code[0]}  #{@code[1]}  #{@code[2]}  #{@code[3]}"
+          break
+        end
       end
+      puts "Would you like to play again? (y/n)"
+      again = gets.chomp.downcase
+      validate_boolean(again)
+      if again == "n"
+        again = false
+        puts "See you next time!"
+        break
+      else 
+        again = true
+      end
+      over = false
+      initialize
     end
   end
 
@@ -82,28 +100,21 @@ class Mastermind
     puts ""
     validate_boolean(answer)
     return if answer == "n"
-    while understand != "y"
-      puts "Here are the rules:"
-      sleep(1)
-      puts "This is Mastermind, designed to be played by one person."
-      sleep(1)
-      puts "This is a codebreaker game, where one player is the code-maker, and the other is the code-breaker."
-      puts "At this time, the computer decides a random code, and the person tries to break the code within 12 tries."
-      puts "The code-maker chooses a code that is four 'pegs' long, from six colors."
-      puts "Press any key to continue..."
-      STDIN.getch
-      puts "The code-breaker gets twelve guesses to break the code."
-      puts "The code-breaker will get hints if they have one of two things correct:"
-      puts "You get a black peg if you have the right color, wrong position,"
-      puts "and a white peg if you have the right color, right position."
-      puts "The code-breaker continues until they run out of guesses or they break the code!"
-      puts "Do you understand?(y/n)"
-      understand = gets.chomp.downcase
-      puts ""
-      validate_boolean(understand)
-      return if understand == "y"
-      puts "OK, here are the rules again."
-    end
+    puts "Here are the rules:"
+    sleep(1)
+    puts "This is Mastermind, designed to be played by one person."
+    sleep(1)
+    puts "This is a codebreaker game, where one player is the code-maker, and the other is the code-breaker."
+    puts "At this time, the computer decides a random code, and the person tries to break the code within eight tries."
+    puts "The code-maker chooses a code that is four 'pegs' long, from six colors."
+    puts "Press any key to continue..."
+    STDIN.getch
+    puts "The code-breaker gets eight guesses to break the code."
+    puts "The code-breaker will get hints if they have one of two things correct:"
+    puts "You get a red peg if you have the right color, wrong position,"
+    puts "and a white peg if you have the right color, right position."
+    puts "The code-breaker continues until they run out of guesses or they break the code!"
+    puts ""
   end
 
   def set_code
@@ -112,7 +123,6 @@ class Mastermind
       @code_nums << num
       code_colors(num)
     end
-    puts "#{@code[0]}  #{@code[1]}  #{@code[2]}  #{@code[3]}"
   end
 
   def get_guess
@@ -126,19 +136,14 @@ class Mastermind
   end
 
   def compare_guess_with_code(array)
-    # compare @code_nums with @code_guesses. 
     @code_nums.each_index do |index|
       if @code_nums[index] == @code_guesses[index]
-        #reward black peg
-        array << @correct_position
-        #puts @hints
+        array << CORRECT_POSITION
       elsif @code_guesses.any? { |el| el == @code_nums[index] }
-        #reward white peg
-        array << @correct_color
-        #puts @hints
+         array << CORRECT_COLOR
       end
-      return array
     end
+    return array
   end
 
   def winner?(winner)
@@ -150,8 +155,6 @@ class Mastermind
       return winner
     end
   end
-
-
 end
 
 game = Mastermind.new
