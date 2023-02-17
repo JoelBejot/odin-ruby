@@ -26,7 +26,7 @@ module Display
 
   def board
     turn = 1
-    puts "Secret Code: REDACTED  REDACTED  REDACTED  REDACTED ".colorize(background: :white)
+    puts "Secret Code: REDACTED  REDACTED  REDACTED  REDACTED ".colorize(color: :blue, background: :white)
     puts ""
     8.times do
       if @guess_hash_colors.has_key?(turn)

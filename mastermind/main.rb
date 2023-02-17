@@ -1,6 +1,4 @@
-require 'pry-byebug'
 require 'colorize'
-require 'colorized_string'
 
 require './display.rb'
 require './validation_methods.rb'
@@ -12,9 +10,10 @@ class Mastermind
 
   CORRECT_POSITION = "\u2022".colorize(:red).encode('utf-8')
   CORRECT_COLOR = "\u2022".colorize(:white).encode('utf-8')
+  $counter = {player: 0, computer: 0}
 
   def initialize
-    @@counter = 0
+
     @name1 = name1
     @name2 = name2
     @turn = 0
@@ -25,13 +24,13 @@ class Mastermind
     @guess_hash_colors = {}
     @code_guesses = ""
     @active_game = true
+    @again = true
   end
 
   def game
     over = false
-    again = true
     self.begin?
-    while again == true
+    while @again == true
       self.display_rules
       self.set_code
       self.board
@@ -43,31 +42,20 @@ class Mastermind
         self.guess_colors(@guess_hash[@turn])
         @hints[@turn] = []
         @hints[@turn] = compare_guess_with_code(@hints[@turn])
-        puts @hints[@turn].to_s + "\n"
         self.board
         over = self.winner?(over)
         if @turn >= 8
-          puts "The correct code was #{@code[0]}  #{@code[1]}  #{@code[2]}  #{@code[3]}"
           break
         end
       end
-      puts "Would you like to play again? (y/n)"
-      again = gets.chomp.downcase
-      validate_boolean(again)
-      if again == "n"
-        again = false
-        puts "See you next time!"
-        break
-      else 
-        again = true
-      end
-      over = false
+      who_won?(over)
+      puts "The score is Computer: #{$counter[:computer]}, #{@name1}: #{$counter[:player]}"
+      over = play_again?
       initialize
     end
   end
 
   def begin?
-    #binding.pry
     start_game = false
     answer = nil
     unless start_game
@@ -82,13 +70,13 @@ class Mastermind
       end
       puts "OK! Let's begin."
       puts ""
-      puts "What would player One like to be called?"
+      puts "What would you like to be called?"
       @name1 = gets.chomp
       puts ""
-      puts "What would player Two like to be called?"
-      @name2 = gets.chomp
-      puts ""
-      puts "OK! I'll call Player One #{@name1} and Player Two #{@name2}."
+      # puts "What would player Two like to be called?"
+      # @name2 = gets.chomp
+      # puts ""
+      puts "OK #{@name1}."
       start_game = true
     end
   end
@@ -108,7 +96,7 @@ class Mastermind
     puts "At this time, the computer decides a random code, and the person tries to break the code within eight tries."
     puts "The code-maker chooses a code that is four 'pegs' long, from six colors."
     puts "Press any key to continue..."
-    STDIN.getch
+    #STDIN.getch
     puts "The code-breaker gets eight guesses to break the code."
     puts "The code-breaker will get hints if they have one of two things correct:"
     puts "You get a red peg if you have the right color, wrong position,"
@@ -155,7 +143,32 @@ class Mastermind
       return winner
     end
   end
+
+  def who_won?(winner)
+    # if computer won, increment their score by one. If the player won, increment their score by one.
+    if winner == true
+      puts "Congratulations! You cracked the code."
+      $counter[:player] += 1
+    else
+      puts "The computer won this time."
+      puts "The correct code was #{@code[0]}  #{@code[1]}  #{@code[2]}  #{@code[3]}."
+      $counter[:computer] += 1
+    end
+  end
+
+  def play_again?
+    puts "Would you like to play again? (y/n)"
+    @again = gets.chomp.downcase
+    validate_boolean(@again)
+    if @again == "n"
+      @again = false
+      puts "See you next time!"
+      exit
+    else 
+      @again = true
+    end
+    return over = false
+  end
 end
 
-game = Mastermind.new
-game.game
+game = Mastermind.new.game
