@@ -1,3 +1,6 @@
+# Just a few methods for displaying the code and guesses.
+# Displaying the board is a loop that displays the whole board each time.
+
 module Display
   def code_colors(num)
     case num
