@@ -151,5 +151,6 @@ def display_guesses
     print " #{@right_guesses[i]} "
   end
   puts ""
+  puts ""
 end
 
