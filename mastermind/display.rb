@@ -1,3 +1,6 @@
+# Just a few methods for displaying the code and guesses.
+# Displaying the board is a loop that displays the whole board each time.
+
 module Display
   def code_colors(num)
     case num
@@ -26,7 +29,7 @@ module Display
 
   def board
     turn = 1
-    puts "Secret Code: REDACTED  REDACTED  REDACTED  REDACTED ".colorize(background: :white)
+    puts "Secret Code: REDACTED  REDACTED  REDACTED  REDACTED ".colorize(color: :blue, background: :white)
     puts ""
     8.times do
       if @guess_hash_colors.has_key?(turn)
